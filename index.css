@@ -1,0 +1,92 @@
+body{
+    background-color: rgb(65, 65, 65);
+}
+.typeUI{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    color:white;
+    row-gap: 40px;
+    
+}
+.timer,
+.language{
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background-color: rgb(52, 51, 51);
+padding:20px;
+border-radius:25px;
+width:25%;
+font-size:100%;
+cursor: pointer;
+height: 3cap;
+text-align: center;
+}
+
+.content,
+.info,
+.reload{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color:rgb(124, 128, 131);
+    font-size:170%;
+}
+
+.reload{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color:rgb(124, 128, 131);
+    font-size:120%;
+    cursor: pointer;
+
+}
+.input{
+    height:35px;
+    border-radius: 10px;
+    font-size:20px;
+    padding-left:10px;
+    outline:none;
+    border:solid;
+    border-color:white;
+    width:50%;
+    display: block;
+}
+.right{
+    color:rgb(48, 255, 48);
+}
+.wrong{
+    color:red;
+}
+
+.cursor{
+    outline: 2px solid white;
+    animation: blink 0.8s infinite;
+    background-color: aliceblue;
+}
+
+@keyframes blink {
+    0% ,100%{opacity:1}
+    50%{opacity:0}
+}
+
+.selectTime{
+    background-color: rgb(53, 51, 51);
+    border-radius: 5px;
+    block-size: 3cap;
+    width: 50%;
+    text-align: center;
+    color:white;
+}
+.currTimer{
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.dynTimer{
+    align-self: flex-start;
+    font-size:250%;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    background-color: rgb(48, 46, 46);
+    padding:3%;
+    border-radius: 18px;
+}
