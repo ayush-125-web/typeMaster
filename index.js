@@ -7,26 +7,77 @@ import paras from './para.js'
     let textTyped=0;
     let paraLength=paras[idx].length;
     let correctlyTyped=0;
-    const contentDIV=document.querySelector('.content')
-    const input=document.querySelector('input')
-    const timeSelector = document.querySelector('.timer')
-    const refershButton=document.querySelector('.reload')
-    const dynTimer=document.querySelector('.dynTime')
-   
+    
+    const ui=document.querySelector('.typeUI');
+
+    function initizaliser(){
+        const contentDIV=document.querySelector('.content')
+        const input=document.querySelector('input')
+        const timeSelector = document.querySelector('.timer')
+        const refershButton=document.querySelector('.reload')
+        const dynTimer=document.querySelector('.dynTime')
+        
+
+        idx=Math.floor(Math.random()*6);
+        currTimer=30;
+        currentIndex=0;
+        isTimeStarted=false;
+        textTyped=0;
+        paraLength=paras[idx].length;
+        correctlyTyped=0;
+
+        randomParaGenrate(contentDIV);
+        timeSelector.textContent=` Timer:  ${currTimer}sec`;
+
+        refershButton.addEventListener('click',()=>render());
+        timeSelector.addEventListener('click',()=>handleOnClickTimer(timeSelector));
+
+        input.addEventListener("input", e => {
+            textTyped++;
+            if(!isTimeStarted){
+                dynTimer.classList.add('dynTimer')
+                handleTime(dynTimer);
+                isTimeStarted=true;
+            }
+            const typed = e.target.value.slice(-1); 
+            const expected = paras[idx][currentIndex];
+
+            updateCursor(currentIndex);
+
+            if (typed === expected) {
+                correctlyTyped++;
+                document.getElementById(`${currentIndex}`).classList.add("right");
+            } else {
+                
+                document.getElementById(`${currentIndex}`).classList.add("wrong");
+            }
+            currentIndex++;
+
+            e.target.value = "";
+        });
+
+
+
+
+    }
 
     function render(){
-         idx=Math.floor(Math.random()*6);
-         currentIndex=0;
-         randomParaGenrate(contentDIV);
-         isTimeStarted=false;
-         dynTimer.textContent='';
-         dynTimer.classList.remove('dynTimer')
+         ui.innerHTML=`
+            <div class="timer"></div>
+            <div class="language">Language : English</div>  
+            <div class="dynTime"></div>
+            <div class="content"></div>
+            <input type="text" class="input" >
+            <span class="info">Enter Your Text Here</span>
+            <button class="reload">refresh</button>
+         `
 
+         initizaliser();
     }
 
     
 
-    function handleTimeSetter(e){
+    function handleTimeSetter(e,timeSelector){
       
         let selectedTIme=e.target.value;
         currTimer=Number(selectedTIme);
@@ -35,7 +86,7 @@ import paras from './para.js'
         timeSelector.textContent=` Timer:  ${currTimer}sec`;
     }
 
-    function handleOnClickTimer(){
+    function handleOnClickTimer(timeSelector){
         if(timeSelector.querySelector('select')) return;
         timeSelector.innerHTML=`<select class="selectTime">
         <option value="30">30s</option>
@@ -44,7 +95,7 @@ import paras from './para.js'
         <option value="120">120s</option>
         </select>`
 
-        document.querySelector('select').addEventListener('change',(e)=>handleTimeSetter(e));
+        document.querySelector('select').addEventListener('change',(e)=>handleTimeSetter(e,timeSelector));
         document.querySelector('select').value=currTimer;
         document.querySelector('select').addEventListener('blur', () => timeSelector.textContent = `Timer: ${currTimer}sec`);
     }
@@ -67,13 +118,40 @@ import paras from './para.js'
         let cpm=textTyped/((currTimer-timeLeft)/60)
         let acc=correctlyTyped/textTyped*100;
 
-        console.log(Math.ceil(wpm));
-        console.log(acc.toFixed(2));
-        console.log(Math.ceil(cpm));
+        let statement;
 
+        if(wpm<25) statement='You are a Tortoise 🐢🐢'
+        else if (wpm<50) statement='You are a Horse 🐎🐎'
+        else statement='You are a cheetah 🐆🐆🐆'
+
+      
+
+        const prevUI=ui;
+
+        ui.innerHTML=`
+        <div class='result'>
+         <div class='wpm'>
+           Your Word Per Minute is : ${Math.ceil(wpm)}
+         </div>
+         <div class='cpm'>
+           Your Character Per Minute is : ${Math.ceil(cpm)}
+         </div>
+         <div class='acc'>
+           Your Accuracy is : ${acc.toFixed(2)}
+         </div>
+         <div class='state'>
+          ${statement}  
+         </div>
+         <button class='reset'>
+         Restart Again
+         </button>
+        </div>`
+
+        
+        ui.querySelector('.reset').addEventListener('click',()=>render());
     }
 
-    function handleTime(){
+    function handleTime(dynTimer){
        let timeLeft=currTimer;
 
        dynTimer.textContent=`Time Left => ${timeLeft}`;
@@ -91,44 +169,6 @@ import paras from './para.js'
        },1000);
 
     }
-
-   
-
-    input.addEventListener("input", e => {
-        textTyped++;
-        if(!isTimeStarted){
-            dynTimer.classList.add('dynTimer')
-            handleTime();
-            isTimeStarted=true;
-        }
-        const typed = e.target.value.slice(-1); 
-        const expected = paras[idx][currentIndex];
-
-        updateCursor(currentIndex);
-
-        if (typed === expected) {
-            correctlyTyped++;
-            document.getElementById(`${currentIndex}`).classList.add("right");
-        } else {
-            
-            document.getElementById(`${currentIndex}`).classList.add("wrong");
-        }
-        currentIndex++;
-
-        e.target.value = "";
-    });
-
-
-randomParaGenrate(contentDIV);
-
-
-timeSelector.textContent=` Timer:  ${currTimer}sec`;
-refershButton.addEventListener('click',()=>render());
-timeSelector.addEventListener('click',()=>handleOnClickTimer());
-
-
-
-
 
 render();
 

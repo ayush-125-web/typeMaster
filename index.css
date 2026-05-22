@@ -1,5 +1,9 @@
 body{
     background-color: rgb(65, 65, 65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 .typeUI{
     display:flex;
@@ -89,4 +93,18 @@ text-align: center;
     background-color: rgb(48, 46, 46);
     padding:3%;
     border-radius: 18px;
+}
+
+.result{
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    background-color: rgb(22, 21, 21);
+    font-family:Arial, Helvetica, sans-serif;
+    height:400px;
+    width:600px;
+    border-radius: 20px;
 }
