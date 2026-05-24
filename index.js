@@ -7,6 +7,8 @@ import paras from './para.js'
     let textTyped=0;
     let paraLength=paras[idx].length;
     let correctlyTyped=0;
+    let keydownhandler=null;
+    let timer=null;
     
     const ui=document.querySelector('.typeUI');
 
@@ -30,7 +32,9 @@ import paras from './para.js'
         timeSelector.textContent=` Timer:  ${currTimer}sec`;
 
         refershButton.addEventListener('click',()=>render());
-        document.addEventListener('keydown',(e)=>{
+        if(keydownhandler) document.removeEventListener('keydown',keydownhandler);
+        
+        keydownhandler=(e)=>{
             if(e.key=='Backspace'){
                 console.log(currentIndex);
     
@@ -70,10 +74,9 @@ import paras from './para.js'
                     document.getElementById(`${currentIndex}`).classList.add("wrong");
                 }
                 currentIndex++;
-
-
             }
-        });
+        }
+        document.addEventListener('keydown',keydownhandler);
         timeSelector.addEventListener('click',()=>handleOnClickTimer(timeSelector));
     }
 
@@ -83,8 +86,6 @@ import paras from './para.js'
             <div class="language">Language : English</div>  
             <div class="dynTime"></div>
             <div class="content"></div>
-            <input type="text" class="input" >
-            <span class="info">Enter Your Text Here</span>
             <button class="reload">refresh</button>
          `
 
@@ -165,17 +166,19 @@ import paras from './para.js'
     }
 
     function handleTime(dynTimer){
+    if(timer) clearInterval(timer);
        let timeLeft=currTimer;
 
        dynTimer.textContent=`Time Left => ${timeLeft}`;
        
 
-       let timer=setInterval(()=>{
+        timer=setInterval(()=>{
         timeLeft--;
         dynTimer.textContent=`Time Left => ${timeLeft}`
 
         if(timeLeft<=0 || textTyped==paraLength){
             clearInterval(timer);
+            timer=null;
             endAndResult(paraLength,correctlyTyped,textTyped,timeLeft);
         }
 
