@@ -30,6 +30,27 @@ import paras from './para.js'
         timeSelector.textContent=` Timer:  ${currTimer}sec`;
 
         refershButton.addEventListener('click',()=>render());
+        input.addEventListener('keydown',(e)=>{
+            if(e.key=='Backspace'){
+                console.log(currentIndex);
+    
+                console.log('deleted');
+                if(document.getElementById(`${currentIndex-1}`).className=='wrong'){
+                    document.getElementById(`${currentIndex-1}`).classList.remove('wrong');
+                }
+                else if(document.getElementById(`${currentIndex-1}`).className=='right'){
+                    correctlyTyped--;
+                    document.getElementById(`${currentIndex-1}`).classList.remove('right');
+                }
+                
+                document.getElementById(`${currentIndex}`).classList.remove('cursor');
+                textTyped--;
+                currentIndex--;
+                document.getElementById(`${currentIndex}`).classList.add('cursor');
+                
+            }
+
+        })
         timeSelector.addEventListener('click',()=>handleOnClickTimer(timeSelector));
 
         input.addEventListener("input", e => {
@@ -40,9 +61,10 @@ import paras from './para.js'
                 isTimeStarted=true;
             }
             const typed = e.target.value.slice(-1); 
+            console.log(typed);
             const expected = paras[idx][currentIndex];
 
-            updateCursor(currentIndex);
+            updateCursor(currentIndex+1);
 
             if (typed === expected) {
                 correctlyTyped++;
