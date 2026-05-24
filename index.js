@@ -30,7 +30,7 @@ import paras from './para.js'
         timeSelector.textContent=` Timer:  ${currTimer}sec`;
 
         refershButton.addEventListener('click',()=>render());
-        input.addEventListener('keydown',(e)=>{
+        document.addEventListener('keydown',(e)=>{
             if(e.key=='Backspace'){
                 console.log(currentIndex);
     
@@ -49,38 +49,32 @@ import paras from './para.js'
                 document.getElementById(`${currentIndex}`).classList.add('cursor');
                 
             }
+            else if(e.key.length==1){
+                textTyped++;
+                if(!isTimeStarted){
+                    dynTimer.classList.add('dynTimer')
+                    handleTime(dynTimer);
+                    isTimeStarted=true;
+                }
+                const typed = e.key; 
+                console.log(typed);
+                const expected = paras[idx][currentIndex];
 
-        })
-        timeSelector.addEventListener('click',()=>handleOnClickTimer(timeSelector));
+                updateCursor(currentIndex+1);
 
-        input.addEventListener("input", e => {
-            textTyped++;
-            if(!isTimeStarted){
-                dynTimer.classList.add('dynTimer')
-                handleTime(dynTimer);
-                isTimeStarted=true;
+                if (typed === expected) {
+                    correctlyTyped++;
+                    document.getElementById(`${currentIndex}`).classList.add("right");
+                } else {
+                    
+                    document.getElementById(`${currentIndex}`).classList.add("wrong");
+                }
+                currentIndex++;
+
+
             }
-            const typed = e.target.value.slice(-1); 
-            console.log(typed);
-            const expected = paras[idx][currentIndex];
-
-            updateCursor(currentIndex+1);
-
-            if (typed === expected) {
-                correctlyTyped++;
-                document.getElementById(`${currentIndex}`).classList.add("right");
-            } else {
-                
-                document.getElementById(`${currentIndex}`).classList.add("wrong");
-            }
-            currentIndex++;
-
-            e.target.value = "";
         });
-
-
-
-
+        timeSelector.addEventListener('click',()=>handleOnClickTimer(timeSelector));
     }
 
     function render(){
@@ -124,10 +118,7 @@ import paras from './para.js'
 
 
     function randomParaGenrate(contentDIV){
-    
         contentDIV.innerHTML=paras[idx].split('').map((char,i)=>`<span id="${i}">${char}</span>`).join('');
-
-    
     }
 
     function updateCursor(currIdx){
