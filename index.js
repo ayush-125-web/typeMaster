@@ -18,6 +18,7 @@ import paras from './para.js'
         const timeSelector = document.querySelector('.timer')
         const refershButton=document.querySelector('.reload')
         const dynTimer=document.querySelector('.dynTime')
+        const hiddenInput=document.getElementById('hiddenInput');
         
 
         idx=Math.floor(Math.random()*6);
@@ -31,36 +32,78 @@ import paras from './para.js'
         randomParaGenrate(contentDIV);
         timeSelector.textContent=` Timer:  ${currTimer}sec`;
 
+        hiddenInput.focus();
+        contentDIV.addEventListener('click',()=>hiddenInput.focus());
+
         refershButton.addEventListener('click',()=>render());
         if(keydownhandler) document.removeEventListener('keydown',keydownhandler);
-        
+
+         //for laptop
         keydownhandler=(e)=>{
             if(e.key=='Backspace'){
-                console.log(currentIndex);
-    
-                console.log('deleted');
-                if(document.getElementById(`${currentIndex-1}`).className=='wrong'){
-                    document.getElementById(`${currentIndex-1}`).classList.remove('wrong');
-                }
-                else if(document.getElementById(`${currentIndex-1}`).className=='right'){
-                    correctlyTyped--;
-                    document.getElementById(`${currentIndex-1}`).classList.remove('right');
-                }
-                
-                document.getElementById(`${currentIndex}`).classList.remove('cursor');
-                textTyped--;
-                currentIndex--;
-                document.getElementById(`${currentIndex}`).classList.add('cursor');
-                
+                 e.preventDefault();
+                handleBackSpace();
             }
             else if(e.key.length==1){
-                textTyped++;
+                 e.preventDefault();
+                handlecharType(e.key,dynTimer);         
+            }
+        };
+
+        //for smartphone
+        hiddenInput.value='';
+        hiddenInput.addEventListener('input',(e)=>{
+            if(e.inputType=='deleteContentBackward'){
+                handleBackSpace();
+            }
+            else if(e.data){
+                handlecharType(e.data,dynTimer);
+                hiddenInput.value='';
+            }
+        })
+        document.addEventListener('keydown',keydownhandler);
+        timeSelector.addEventListener('click',()=>handleOnClickTimer(timeSelector));
+        
+    }
+
+    function render(){
+         ui.innerHTML=`
+            <div class="timer"></div>
+            <div class="language">Language : English</div>  
+            <div class="dynTime"></div>
+            <input type="text" id="hiddenInput" 
+       style="opacity:0; position:absolute; pointer-events:none;" />
+            <div class="content"></div>
+            <button class="reload">refresh</button>
+         `
+
+         initizaliser();
+    }
+
+    function handleBackSpace(){
+        if(document.getElementById(`${currentIndex-1}`).className=='wrong'){
+            document.getElementById(`${currentIndex-1}`).classList.remove('wrong');
+        }
+        else if(document.getElementById(`${currentIndex-1}`).className=='right'){
+            correctlyTyped--;
+            document.getElementById(`${currentIndex-1}`).classList.remove('right');
+        }
+        
+        document.getElementById(`${currentIndex}`).classList.remove('cursor');
+        textTyped--;
+        currentIndex--;
+        document.getElementById(`${currentIndex}`).classList.add('cursor');
+
+    }
+
+    function handlecharType(char,dynTimer){
+        textTyped++;
                 if(!isTimeStarted){
                     dynTimer.classList.add('dynTimer')
                     handleTime(dynTimer);
                     isTimeStarted=true;
                 }
-                const typed = e.key; 
+                const typed = char; 
                 console.log(typed);
                 const expected = paras[idx][currentIndex];
 
@@ -75,22 +118,7 @@ import paras from './para.js'
                 }
                 currentIndex++;
             }
-        }
-        document.addEventListener('keydown',keydownhandler);
-        timeSelector.addEventListener('click',()=>handleOnClickTimer(timeSelector));
-    }
 
-    function render(){
-         ui.innerHTML=`
-            <div class="timer"></div>
-            <div class="language">Language : English</div>  
-            <div class="dynTime"></div>
-            <div class="content"></div>
-            <button class="reload">refresh</button>
-         `
-
-         initizaliser();
-    }
 
     
 
