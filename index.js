@@ -151,8 +151,15 @@ import paras from './para.js'
     }
 
     function updateCursor(currIdx){
+        const active=document.getElementById(`${currIdx}`);
         if(currIdx!=0) document.getElementById(`${currIdx-1}`).classList.remove('cursor');
         document.getElementById(`${currIdx}`).classList.add('cursor');
+
+        active.scrollIntoView({
+             behavior: "smooth",
+             block: "nearest",
+             inline: "nearest"
+        })
     }
 
     function endAndResult(paraLength,correctlyTyped,textTyped,timeLeft){
